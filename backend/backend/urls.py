@@ -1,7 +1,11 @@
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenBlacklistView
-from account.views import VerifyEmailView, LoginView, RegisterView, LogoutView
+from account.views import VerifyEmailView, LoginView, RegisterView, LogoutView, ProfileView, UserManagementViewSet
+
+router = DefaultRouter()
+router.register(r'users', UserManagementViewSet, basename='user-management')
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -13,4 +17,7 @@ urlpatterns = [
     path('api/logout/', LogoutView.as_view(), name='logout'),
     path('api/verify-email/', VerifyEmailView.as_view(), name='verify_email'),
     path('api/verify-email/<str:uidb64>/<str:token>/', VerifyEmailView.as_view(), name='verify_email'),
+    path('api/profile/', ProfileView.as_view(), name='profile'),
+
+    path('api/', include(router.urls)),
 ]

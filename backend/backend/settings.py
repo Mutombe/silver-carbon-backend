@@ -1,6 +1,6 @@
 from datetime import timedelta
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -114,8 +114,9 @@ AUTH_USER_MODEL = 'account.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.SessionAuthentication',
+        #'rest_framework.authentication.BasicAuthentication',
+        #'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
@@ -130,9 +131,13 @@ WSGI_APPLICATION = "backend.wsgi.application"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'biuvoklhiyogsccdz2th',
+        'USER': 'uadcbdv21ezvgapsfgpd',
+        'PASSWORD': 'pXMGNfiuADpK62ENrVtS7VT8E0wjbw',
+        'HOST': 'biuvoklhiyogsccdz2th-postgresql.services.clever-cloud.com',
+        'PORT': '50013',
     }
 }
 
@@ -159,7 +164,7 @@ AUTH_PASSWORD_VALIDATORS = [
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'silvercarbonofficial@gmail.com'  # Your Gmail address
+EMAIL_HOST_USER = 'simbamtombe@gmail.com'
 EMAIL_HOST_PASSWORD = 'itzh jjkc hdmv csih'
 DEFAULT_FROM_EMAIL = 'noreply@silvercarbon.com'
 EMAIL_USE_TLS = True
@@ -177,8 +182,12 @@ USE_I18N = True
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "static/"
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

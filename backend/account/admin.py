@@ -2,6 +2,7 @@
 from django.contrib import admin
 from .models import User
 
+
 class AdminUserOverview(admin.ModelAdmin):
     list_display = (
         "id",
@@ -9,8 +10,7 @@ class AdminUserOverview(admin.ModelAdmin):
         "username",
         "email",
     )
-    search_fields = (
-        "username",
-    )
+    search_fields = ("username",)
+
 
 admin.site.register(User, AdminUserOverview)
