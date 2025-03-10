@@ -6,7 +6,7 @@ from .settings import BASE_DIR
 ALLOWED_HOSTS = [
     os.environ.get('RENDER_EXTERNAL_HOSTNAME'),
     'avccmf.onrender.com',  # Add your backend domain
-    'avccmf-frontend.onrender.com',  # Add your frontend domain
+    'silvercarbon.co.zw',  # Add your frontend domain
 ]
 
 DEBUG = False
@@ -14,7 +14,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # CORS SETTINGS
 CORS_ALLOWED_ORIGINS = [
-    'https://avccmf-frontend.onrender.com',
+    'https://silvercarbon.co.zw',
     'http://localhost:5173',
 ]
 
@@ -48,7 +48,7 @@ CORS_EXPOSE_HEADERS = [
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://avccmf-frontend.onrender.com',
+    'https://silvercarbon.co.zw',
     'https://avccmf.onrender.com',
 ]
 
@@ -67,7 +67,7 @@ MIDDLEWARE = [
 
 # STATIC FILES CONFIGURATION
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # MEDIA FILES CONFIGURATION
@@ -78,10 +78,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bpaz1akpxtrsuurvix8s',
-        'USER': 'ubngbiulitpnevkwsp2k',
-        'PASSWORD': 'hKBpZf63uStkEt25VsnO8kYwlyDjaa',
-        'HOST': 'bpaz1akpxtrsuurvix8s-postgresql.services.clever-cloud.com',
+        'NAME': 'biuvoklhiyogsccdz2th',
+        'USER': 'uadcbdv21ezvgapsfgpd',
+        'PASSWORD': 'pXMGNfiuADpK62ENrVtS7VT8E0wjbw',
+        'HOST': 'biuvoklhiyogsccdz2th-postgresql.services.clever-cloud.com',
         'PORT': '50013',
     }
 }
