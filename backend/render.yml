@@ -1,0 +1,11 @@
+services:
+  - type: web
+    plan: free
+    name: backend
+    runtime: python
+    buildCommand: "./backend/build.sh"
+    startCommand: "cd backend && gunicorn backend.asgi:application -w 4 -k uvicorn.workers.UvicornWorker"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: backend.settings
+    staticPublishPath: ./backend/staticfiles

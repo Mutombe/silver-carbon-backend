@@ -26,6 +26,9 @@ from rest_framework import permissions
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import viewsets, permissions, status
 from django.db.models import Q
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
@@ -100,14 +103,22 @@ class RegisterView(APIView):
             verification_link = f"http://localhost:5173/verify-email/{uid}/{token}/"
 
             subject = "Verify Your Email"
-            message = render_to_string(
-                "verify_email.html",
+            html_message = render_to_string(
+            "verify_email.html",
                 {
                     "user": user,
                     "verification_link": verification_link,
                 },
             )
-            send_mail(subject, message, "noreply@hospital.com", [user.email])
+            plain_message = strip_tags(html_message)  # Create a text/plain version
+            email = EmailMultiAlternatives(
+                subject, 
+                plain_message, 
+                "noreply@silvercarbon.com",  # Update this to match your domain
+                [user.email]
+            )
+            email.attach_alternative(html_message, "text/html")
+            email.send()
 
             return Response(
                 {
