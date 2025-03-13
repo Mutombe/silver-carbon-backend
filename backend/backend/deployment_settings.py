@@ -5,7 +5,7 @@ from .settings import BASE_DIR
 # SECURITY SETTINGS
 ALLOWED_HOSTS = [
     os.environ.get('RENDER_EXTERNAL_HOSTNAME'),
-    'avccmf.onrender.com',  # Add your backend domain
+    'silver-carbon-backend.com',  # Add your backend domain
     'silvercarbon.co.zw',  # Add your frontend domain
 ]
 
@@ -49,7 +49,7 @@ CORS_EXPOSE_HEADERS = [
 
 CSRF_TRUSTED_ORIGINS = [
     'https://silvercarbon.co.zw',
-    'https://avccmf.onrender.com',
+    'https://silver-carbon-backend.onrender.com',
 ]
 
 # MIDDLEWARE CONFIGURATION
