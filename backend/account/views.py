@@ -100,7 +100,7 @@ class RegisterView(APIView):
             # Generate verification token and send email
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            verification_link = f"http://localhost:5173/verify-email/{uid}/{token}/"
+            verification_link = f"http://silvercarbon.co.zw/verify-email/{uid}/{token}/"
 
             subject = "Verify Your Email"
             html_message = render_to_string(
