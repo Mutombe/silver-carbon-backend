@@ -15,10 +15,12 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # CORS SETTINGS
 CORS_ALLOWED_ORIGINS = [
     'https://silvercarbon.co.zw',
+    'https://www.silvercarbon.co.zw',
     'http://localhost:5173',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
+CORS_EXPOSE_HEADERS = ['Content-Type', 'Authorization']
 
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -98,7 +100,7 @@ SECURE_HSTS_PRELOAD = True
 # REST FRAMEWORK SETTINGS
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
@@ -110,6 +112,15 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
     ],
+}
+
+# deployment_Settings.py
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 
 # WHITENOISE CONFIGURATION
