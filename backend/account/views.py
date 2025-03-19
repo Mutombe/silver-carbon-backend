@@ -29,7 +29,11 @@ from django.db.models import Q
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
-
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
+from .models import Device
+from .serializers import DeviceSerializer
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = CustomTokenObtainPairSerializer
 
@@ -193,8 +197,6 @@ class ProfileView(APIView):
                 {"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
             )
 
-
-
 class UserManagementViewSet(viewsets.ModelViewSet):
     serializer_class = UserListSerializer
     
@@ -271,3 +273,56 @@ class UserManagementViewSet(viewsets.ModelViewSet):
             {"status": "success", "role": user.role},
             status=status.HTTP_200_OK
         )
+
+class IsOwnerOrAdmin(permissions.BasePermission):
+    """
+    Custom permission to only allow owners of an object or admins to edit it.
+    """
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+            
+        # Admin users can do anything
+        if request.user.role == 'ADMIN' or request.user.is_superuser:
+            return True
+            
+        # Write permissions are only allowed to the owner of the device
+        return obj.user == request.user
+
+class DeviceViewSet(viewsets.ModelViewSet):
+    serializer_class = DeviceSerializer
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrAdmin]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['device_fuel', 'device_technology', 'country']
+    search_fields = ['device_name', 'address', 'state_province', 'issuer_organisation']
+    ordering_fields = ['device_name', 'created_at', 'capacity', 'commissioning_date']
+    
+    def get_queryset(self):
+        user = self.request.user
+        
+        # Admins can see all devices
+        if user.role == 'ADMIN' or user.is_superuser:
+            return Device.objects.all().order_by('-created_at')
+            
+        # Regular users can only see their own devices
+        return Device.objects.filter(user=user).order_by('-created_at')
+    
+    @action(detail=False, methods=['get'])
+    def my_devices(self, request):
+        """Endpoint to get only the current user's devices"""
+        devices = Device.objects.filter(user=request.user).order_by('-created_at')
+        serializer = self.get_serializer(devices, many=True)
+        return Response(serializer.data)
+    
+    @action(detail=False, methods=['get'])
+    def fuel_types(self, request):
+        """Return available fuel types"""
+        return Response(dict(Device.DEVICE_FUEL_CHOICES))
+    
+    @action(detail=False, methods=['get'])
+    def technology_types(self, request):
+        """Return available technology types"""
+        return Response(dict(Device.DEVICE_TECHNOLOGY_CHOICES))

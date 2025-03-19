@@ -5,7 +5,7 @@ from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.exceptions import AuthenticationFailed
 from django.core.exceptions import ObjectDoesNotExist
-
+from .models import Device
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -113,3 +113,26 @@ class UserListSerializer(serializers.ModelSerializer):
         except Profile.DoesNotExist:
             pass
         return obj.username
+    
+class DeviceSerializer(serializers.ModelSerializer):
+    user_email = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Device
+        fields = [
+            'id', 'user', 'user_email', 'device_name', 'default_account_code', 
+            'issuer_organisation', 'device_fuel', 'device_technology', 
+            'capacity', 'commissioning_date', 'requested_effective_registration_date',  
+            'other_labelling_scheme', 'address', 'state_province', 'postcode', 
+            'country', 'latitude', 'longitude', 'production_facility_registration',
+            'declaration_of_ownership', 'metering_evidence', 'single_line_diagram',
+            'project_photos', 'additional_notes', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'user', 'user_email', 'created_at', 'updated_at']
+    
+    def get_user_email(self, obj):
+        return obj.user.email
+    
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        return super().create(validated_data)
